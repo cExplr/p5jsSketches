@@ -1,9 +1,12 @@
-var Paper = {
+class Paper{
 	//THIS PROGRAM ASSUMES THAT A SQUARE PAPER IS USED
 	//IF YOU WANT NON SQUARE GRID THEN REIMPLEMENT THE DRAW GRID
-	paperLength:400
-};
+	constructor(){
+		this.paperLength = 400;
+	}
+}
 
+var paper = new Paper();
 
 var Grid={
 	gridDivisionNumber:0,//change this
@@ -13,29 +16,34 @@ var Grid={
 	divisionNoY:0
 };
 
-//Created a vertex "class"
-function Vertex(){
-	this.x=0;
-	this.y=0;
-};
-Vertex.prototype.setX=function(x){
-	this.x = x;
-}
-Vertex.prototype.setY=function(y){
-	this.y=y;
-}
+class Vertex{
+	//Created a vertex "class"
+	constructor(){
+		this.x=0;
+		this.y=0;
+	}
 
-Vertex.prototype.getX=function(){
-	return this.x;
-}
-Vertex.prototype.getY=function(){
-	return this.y;
+	setX(x){
+		this.x = x;
+	}
+	setY(y){
+		this.y=y;
+	}
+
+	getX(){
+		return this.x;
+	}
+
+	getY(){
+		return this.y;
+	}	
 }
 
 
 function setup(){
+	
 	Grid.gridDivisionNumber = 16;	//Draw 16 grids
-	createCanvas(Paper.paperLength,Paper.paperLength);	// Creating the paper
+	createCanvas(paper.paperLength,paper.paperLength);	// Creating the paper
 	background(220);
 
 	drawGrid(Grid.gridDivisionNumber);
@@ -46,10 +54,10 @@ function drawGrid(gridDivisionNumber){
 
 	console.log("DRAWING GRID");
 	//DRAW GRID FIRST
-	for(var x = 0 ; x <= Paper.paperLength ; x += Paper.paperLength/gridDivisionNumber)
-		line(x,0,x,Paper.paperLength);
-	for(var y = 0 ; y <= Paper.paperLength ; y+= Paper.paperLength/gridDivisionNumber)
-		line(0,y,Paper.paperLength,y);
+	for(var x = 0 ; x <= paper.paperLength ; x += paper.paperLength/gridDivisionNumber)
+		line(x,0,x,paper.paperLength);
+	for(var y = 0 ; y <= paper.paperLength ; y+= paper.paperLength/gridDivisionNumber)
+		line(0,y,paper.paperLength,y);
 	console.log("Grid Drawn");
 	/*
 	//THIS TEST THE MAPPING FUNCTION. CHANGE THE FIRST TWO VARIABLE BELOW TO SEE TRHE DIFFEREMCE
@@ -68,11 +76,11 @@ function drawGrid(gridDivisionNumber){
 	*/
 	console.log("Initializing all grid vertex coordinates");
 	for(Grid.divisionNoX = 0 ; Grid.divisionNoX <= gridDivisionNumber ; Grid.divisionNoX++){
-		x=map(Grid.divisionNoX,0,gridDivisionNumber,0,Paper.paperLength); 
+		x=map(Grid.divisionNoX,0,gridDivisionNumber,0,paper.paperLength); 
 		//console.log("curent X : " + x);
 
 		for(Grid.divisionNoY=0; Grid.divisionNoY <= gridDivisionNumber ; Grid.divisionNoY++){
-			y=map(Grid.divisionNoY,0,gridDivisionNumber,0,Paper.paperLength);
+			y=map(Grid.divisionNoY,0,gridDivisionNumber,0,paper.paperLength);
 			Grid.gridVertexX.push(x);
 			Grid.gridVertexY.push(y);
 		}
@@ -102,15 +110,14 @@ function mouseClicked(){
 }
 
 function searchForClosestVertex(){
-
+	//Choose the closest vertex and draw an ellipse on it (circle)
+	var closestVertexToClick = new Vertex();	// The selected vertex
 	var clickPositionX = pmouseX;
 	var clickPositionY = pmouseY;
-
-	var plusMinus = 6/100;
+	var plusMinus = 2/100;		//The acceptable range from the vertexto get selected
 
 	for (var x = 0 ; x < Grid.gridVertexX.length;x++){
-		if(clickPositionX >= (Grid.gridVertexX[x] - Grid.gridVertexX[x]*plusMinus) && clickPositionX <= (Grid.gridVertexX[x] + Grid.gridVertexX[x]*plusMinus)){
-			
+		if(clickPositionX >= (Grid.gridVertexX[x] - Grid.gridVertexX[x]*plusMinus) && clickPositionX <= (Grid.gridVertexX[x] + Grid.gridVertexX[x]*plusMinus)){		
 			for (var y = 0 ; y < Grid.gridVertexY.length;y++){
 				if (clickPositionY >= (Grid.gridVertexY[y] - Grid.gridVertexY[y] * plusMinus) &&clickPositionY <= (Grid.gridVertexY[y] + Grid.gridVertexY[y] * plusMinus) ) {
 					
@@ -125,22 +132,10 @@ function searchForClosestVertex(){
 			}
 		}
 	}
-
-	var closestVertexToClick = new Vertex();
+	//THIS WILL SHOW THAT THE VERTEX IS NOT VALID 
 	closestVertexToClick.setX(-1);
 	closestVertexToClick.setY(-1);
-	
+
 	return closestVertexToClick;
-
 }
-
-function draw(){
-	if(keyIsPressed){
-		reset();
-
-	}
-}
-
-function reset(){
-	console.log("Reset!");
-}
+function draw(){}
