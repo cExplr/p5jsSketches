@@ -1,76 +1,66 @@
+var Paper = {
+	//THIS PROGRAM ASSUMES THAT A SQUARE PAPER IS USED
+	//IF YOU WANT NON SQUARE GRID THEN REIMPLEMENT THE DRAW GRID
 
-canvasLength = 400;
-canvasHeight = 400;
-
-var GridVertex = {
-	x:[],
-	y:[]
+	paperLength:400.0
 };
 
-var Grid={	//Properties of GRID
-	gridSize:16,
-	unitX:0,	//unitX refers to pixels per unit
-	unitY:0,	
-
+var Grid={
+	gridDivisionNumber:0,//change this
+	gridVertexX:[],
+	gridVertexY:[],
+	divisionNoX:0, //measured in pixels\
+	divisionNoY:0
 };
 
-function setup() {
-	Grid.gridSize = 16;	//Set grid size
-	createCanvas(canvasLength,canvasHeight);
-	background(220,220,220);
+function setup(){
+	Grid.gridDivisionNumber = 16;	//Draw 16 grids
+	createCanvas(Paper.paperLength,Paper.paperLength);	// Creating the paper
+	background(220);
 
-	Grid.unitX = canvasLength/16.0;	//This is the total number of pixels for one division
-	console.log("UnitX : " + Grid.unitX);
-
-	Grid.unitY = canvasHeight/16.0;
-	console.log("UnitY : " + Grid.unitY); 
-	drawGrid(Grid.gridSize);
-}
-
-function draw() {
+	drawGrid(Grid.gridDivisionNumber);
 
 }
 
-function drawGrid(gridSize){
-	strokeWeight(1);
-	stroke(0);
-	var temp = [];
-	var temp1=[];
-	for(var x = 0 ; x < canvasHeight ; x += canvasHeight/gridSize){
-		line(x,0,x,canvasHeight);
-		temp.push(x);
-	}
+function drawGrid(gridDivisionNumber){
 
-	for(var y = 0 ; y < canvasLength ; y+= canvasLength/gridSize){
-		line(0,y,canvasLength,y);
-		temp1.push(y);
-	}
-	/*THIS IS TO INITLIZE AN ARRAY OF VERTEX THAT BELONGS TO THE GRID
-	* We will compare to this value when clicked to see if it falls within the 5% range
+	console.log("DRAWING GRID");
+	//DRAW GRID FIRST
+	for(var x = 0 ; x <= Paper.paperLength ; x += Paper.paperLength/gridDivisionNumber)
+		line(x,0,x,Paper.paperLength);
+	for(var y = 0 ; y <= Paper.paperLength ; y+= Paper.paperLength/gridDivisionNumber)
+		line(0,y,Paper.paperLength,y);
+	console.log("Grid Drawn");
+	/*
+	//THIS TEST THE MAPPING FUNCTION. CHANGE THE FIRST TWO VARIABLE BELOW TO SEE TRHE DIFFEREMCE
+	//IN THE BROWSER CONSOLE
+	Grid.divisionNoX = 3 ;
+	Grid.divisionNoY = 2 ;
+
+	x=map(Grid.divisionNoX,0,gridDivisionNumber,0,Paper.paperLength); 
+	y=map(Grid.divisionNoY,0,gridDivisionNumber,0,Paper.paperHeight);
+	console.log("x : " + x);
+	console.log("y : " + y);
 	*/
-	for(var i = 0 ; i < temp.length; i++){
-		for(var j = 0 ; j < temp1.length;j++){
-			GridVertex.x.push(i*Grid.unitX);
-			GridVertex.y.push(j*Grid.unitY);
+
+	/* Nested for loop below stores the vertex coordinates into their Grid.gridVertexX[] and
+		Grid.gridVertexY[] respectively
+	*/
+	console.log("Initializing all grid vertex coordinates");
+	for(Grid.divisionNoX = 0 ; Grid.divisionNoX <= gridDivisionNumber ; Grid.divisionNoX++){
+		x=map(Grid.divisionNoX,0,gridDivisionNumber,0,Paper.paperLength); 
+		//console.log("curent X : " + x);
+
+		for(Grid.divisionNoY=0; Grid.divisionNoY <= gridDivisionNumber ; Grid.divisionNoY++){
+			y=map(Grid.divisionNoY,0,gridDivisionNumber,0,Paper.paperLength);
+			Grid.gridVertexX.push(x);
+			Grid.gridVertexY.push(y);
 		}
 	}
-	//To access first vertex, 
-	//console.log("GridVertex.x[0] +","+GridVertex.y[0])
-	//
-	console.log(GridVertex.x);
-	console.log(GridVertex.y);
 
-	// for(var p = 0;p<GridVertex.x.length ; p++){
-	// 	console.log((GridVertex.x[p])/400+","+GridVertex.y[p]/400);
+	// THIS TEST TO GET ALL VALUES OF COORDINATES IN THE GRID
+	// for(var i = 0 ; i < Grid.gridVertexX.length ; i++){
+	// 	console.log("( "+ Grid.gridVertexX[i] + "," + Grid.gridVertexY[i] +" )");
 	// }
-}
-
-function reset(){
-	background(220,220,220);
-	drawGrid();
-}
-
-function mouseClicked(){
-
-
+	console.log("Done initializing all grid vertex");
 }
