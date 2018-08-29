@@ -1,0 +1,35 @@
+
+https://www.npmjs.com/package/p5-manager
+https://www.youtube.com/watch?v=aKYlikFAV4k
+https://www.youtube.com/watch?v=-L-WgKMFuhE
+
+
+Step 1: Initialize a new collection
+
+$ p5 new my_collection
+
+By running this command, it will create a collection directory and some p5 libraries to it. See the output log:
+
+# create : my_collection 
+# create : my_collection/libraries 
+# create : my_collection/libraries/p5.js 
+# ... 
+
+Step 2: Generate a p5 project
+
+$ cd my_collection
+$ p5 generate my_project
+# or... 
+$ p5 g my_project
+
+This will generate a p5 project folder with default templates in it. (Make sure you are running this command in a collection directory.)
+
+# create : my_project 
+# create : my_project/sketch.js 
+# create : my_project/index.html 
+
+Step 3: Start the server and have fun!
+
+$ p5 server
+# or... 
+$ p5 s

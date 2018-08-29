@@ -13,8 +13,7 @@ var paper = new Paper();
 
 var Grid={
 	gridDivisionNumber:0,//change this
-	gridVertexX:[],
-	gridVertexY:[],
+	gridVertex:[],
 	divisionNoX:0, //measured in pixels\
 	divisionNoY:0
 };
@@ -78,17 +77,19 @@ function drawGrid(gridDivisionNumber){
 		Grid.gridVertexY[] respectively
 	*/
 	console.log("Initializing all grid vertex coordinates");
+	var tempVertex = new Vertex();
 	for(Grid.divisionNoX = 0 ; Grid.divisionNoX <= gridDivisionNumber ; Grid.divisionNoX++){
 		x=map(Grid.divisionNoX,0,gridDivisionNumber,0,paper.paperLength); 
 		//console.log("curent X : " + x);
 
 		for(Grid.divisionNoY=0; Grid.divisionNoY <= gridDivisionNumber ; Grid.divisionNoY++){
 			y=map(Grid.divisionNoY,0,gridDivisionNumber,0,paper.paperLength);
-			Grid.gridVertexX.push(x);
-			Grid.gridVertexY.push(y);
+			tempVertex.setX(x);
+			tempVertex.setY(y);
+			Grid.gridVertex.push(tempVertex);
 		}
 	}
-
+	console.log(Grid.gridVertex);
 	// THIS TEST TO GET ALL VALUES OF COORDINATES IN THE GRID
 	// for(var i = 0 ; i < Grid.gridVertexX.length ; i++){
 	// 	console.log("( "+ Grid.gridVertexX[i] + "," + Grid.gridVertexY[i] +" )");
@@ -119,14 +120,14 @@ function searchForClosestVertex(){
 	var clickPositionY = pmouseY;
 	var plusMinus = 2/100;		//The acceptable range from the vertexto get selected
 
-	for (var x = 0 ; x < Grid.gridVertexX.length;x++){
-		if(clickPositionX >= (Grid.gridVertexX[x] - Grid.gridVertexX[x]*plusMinus) && clickPositionX <= (Grid.gridVertexX[x] + Grid.gridVertexX[x]*plusMinus)){		
+	for (var x = 0 ; x < Grid.gridVertex.length;x++){
+		if(clickPositionX >= (Grid.gridVertex[x].getX() - Grid.gridVertex[x].getX()*plusMinus) && clickPositionX <= (Grid.gridVertex[x].getX() + Grid.gridVertex[x].getX()*plusMinus)){		
 			for (var y = 0 ; y < Grid.gridVertexY.length;y++){
-				if (clickPositionY >= (Grid.gridVertexY[y] - Grid.gridVertexY[y] * plusMinus) &&clickPositionY <= (Grid.gridVertexY[y] + Grid.gridVertexY[y] * plusMinus) ) {
+				if (clickPositionY >= (Grid.gridVertex[y].getY() - Grid.gridVertex[y].getY() * plusMinus) &&clickPositionY <= (Grid.gridVertex[y].getY() + Grid.gridVertex[y].getY() * plusMinus) ) {
 					
 					var closestVertexToClick = new Vertex();
-					closestVertexToClick.setX(Grid.gridVertexX[x]);
-					closestVertexToClick.setY(Grid.gridVertexY[y]);
+					closestVertexToClick.setX(Grid.gridVertex[x].getX());
+					closestVertexToClick.setY(Grid.gridVertex[y].getY());
 					// console.log("Clicked within range for X at : "+ pmouseX + " where grid vertex falls on " + Grid.gridVertexX[x]);
 					// console.log("Clicked within range for y : " + pmouseY + " where grid vertex falls on " + Grid.gridVertexY[y]);
 					console.log("closestVertexToClick : "+ closestVertexToClick.getX()+","+closestVertexToClick.getY());
