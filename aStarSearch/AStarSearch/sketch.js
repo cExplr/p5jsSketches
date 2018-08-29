@@ -1,5 +1,5 @@
-var cols = 60;
-var rows = 60;
+var cols = 80;
+var rows = 80;
 var grid = new Array(cols);
 
 var openSet = [];
@@ -8,11 +8,12 @@ var path = [];
 
 var start;
 var end;
-//var endx = cols-1;
-//var endy = rows-1;
-var endx=35;
-var endy=42;
+var endx = cols-1;
+var endy = rows-1;
+// var endx=35;
+// var endy=42;
 var w, h;
+var totalMoves = 0;	// Just to log down how many moves in total
 
 function Spot(i,j){
 	this.i = i;
@@ -46,6 +47,7 @@ function Spot(i,j){
 	}
 
 	this.show = function(color){
+
 		fill(color);
 		if(this.wall){
 			fill(0);
@@ -70,9 +72,9 @@ function heuristic(a,b){
 
 
 function setup() {
-
+	;
 	createCanvas(600, 600);
-	console.log("A*");
+	console.log("A* Path Finding\n=======================================");
 
 	w = width/cols;
 	h = height/rows;
@@ -92,7 +94,7 @@ function setup() {
 				grid[i][j].addNeighbors(grid);
 		}
 	}
-
+	console.log("Completed Initializing grid with spots");
 	start = grid[0][0];
 	end = grid[endx][endy];
 	start.g = 0;
@@ -100,69 +102,79 @@ function setup() {
 	start.f = heuristic(start,end);
 	start.wall = false;
 	end.wall = false;
-
+	console.log("Please Click to toggle Finding path")
 }
-
+var startFind = 0;
+function mouseClicked(){
+	startFind ^= 1;
+	if(startFind == 1){
+		console.log("Start Finding Path ...");
+	}else{
+		console.log("Stop Finding Path ... ");
+	}
+}
 
 
 function draw() {
 	background(0);
 
+	if(startFind == 1){
+		if(openSet.length > 0){
+			//Keep on iterating
 
-	if(openSet.length > 0){
-		//Keep on iterating
-
-		var lowestIndex=0;
-		for(var i = 0 ; i < openSet.length ; i++){
-			if(openSet[i].f < openSet[lowestIndex].f){
-				lowestIndex = i;
-			}
-		}
-		var current = openSet[lowestIndex];
-
-		if(current === end){
-
-			path = [];
-			var temp = current;
-
-			while(temp.previous){
-				path.push(temp.previous);
-				temp = temp.previous;
-			}
-			console.log("Path : ");
-			for(var i = 0 ; i < path.length ; i++){
-				console.log("(" + path[i].j + "," + path[i].i + ")");
-			}
-			console.log("Done!");
-
-			noLoop();
-			//return;
-
-
-		}
-		else{
-
-		closedSet.push(current);
-		//openSet.remove
-		removeFromArray(openSet,current);
-
-		var neighbors = current.neighbors;
-		var tentative_gscore = 999;
-		for (var i = 0 ; i < neighbors.length;i++){
-				var neighbor = neighbors[i];
-				if(closedSet.includes(neighbor)){
-					continue; //ignore the neighbor which has already been evaluated
+			var lowestIndex=0;
+			for(var i = 0 ; i < openSet.length ; i++){
+				if(openSet[i].f < openSet[lowestIndex].f){
+					lowestIndex = i;
 				}
-				//get the tentaive_gscore
-				tentaive_gscore = current.g + 1;
-				if(!( openSet.includes(neighbor)) && neighbor.wall == false){
-					openSet.push(neighbor);
-				}else if(tentaive_gscore >= neighbor.g){
-					continue;
+			}
+			var current = openSet[lowestIndex];
+
+			if(current === end){
+
+				path = [];
+				var temp = current;
+
+				while(temp.previous){
+					totalMoves += 1;
+					path.push(temp.previous);
+					temp = temp.previous;
 				}
-				neighbor.previous = current;
-				neighbor.h = heuristic(neighbor,end);
-				neighbor.f = neighbor.g + neighbor.h;
+				// console.log("Path : ");
+				// for(var i = 0 ; i < path.length ; i++){
+				// 	console.log("(" + path[i].j + "," + path[i].i + ")");
+				// }
+				console.log("Done! There are " + totalMoves + " moves in the paths according toi this heuristic!");
+
+				noLoop();
+				//return;
+
+
+			}
+			else{
+
+			closedSet.push(current);
+			//openSet.remove
+			removeFromArray(openSet,current);
+
+			var neighbors = current.neighbors;
+			var tentative_gscore = 999;
+			for (var i = 0 ; i < neighbors.length;i++){
+					var neighbor = neighbors[i];
+					if(closedSet.includes(neighbor)){
+						continue; //ignore the neighbor which has already been evaluated
+					}
+					//get the tentaive_gscore
+					tentaive_gscore = current.g + 1;
+					if(!( openSet.includes(neighbor)) && neighbor.wall == false){
+						openSet.push(neighbor);
+					}else if(tentaive_gscore >= neighbor.g){
+						continue;
+					}
+					neighbor.previous = current;
+					neighbor.h = heuristic(neighbor,end);
+					neighbor.f = neighbor.g + neighbor.h;
+				}
 			}
 		}
 	}
